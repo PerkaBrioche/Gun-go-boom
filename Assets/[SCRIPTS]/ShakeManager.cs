@@ -25,16 +25,30 @@ public class ShakeManager : MonoBehaviour
 
     private IEnumerator Shake(float intensity, float duration)
     {
+        float shakeIntensity = intensity;
         float elapsed = 0.0f;
         Vector3 originalPos = _rectTransform.localPosition;
 
+
+        
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
 
-            float offsetX = Random.Range(-intensity, intensity);
-            float offsetY = Random.Range(-intensity, intensity);
+            float offsetX = Random.Range(-shakeIntensity, shakeIntensity);
+            float offsetY = Random.Range(-shakeIntensity, shakeIntensity);
+            
+            if (shakeIntensity < 0)
+            {
+                shakeIntensity += Time.deltaTime;
+            }
+            if (shakeIntensity > 0)
+            {
+                shakeIntensity -= Time.deltaTime;
+            }
 
+
+            
             _rectTransform.localPosition = new Vector3(originalPos.x + offsetX, originalPos.y + offsetY, originalPos.z);
 
             yield return null;

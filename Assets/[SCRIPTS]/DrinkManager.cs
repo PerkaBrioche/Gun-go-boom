@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -29,28 +30,25 @@ public class DrinkManager : MonoBehaviour
         _playerNumberThisRound = GameManager.Instance.GetPlayerNumber();
         _drinkLeftToSpawn = _playerNumberThisRound;
         _alcoolLeftToSpawn = GetAlcoolNumber();
-        SpawnDrink(_playerNumberThisRound);
+
+        StartCoroutine(WaitForSpawn());
     }
     
-    private void SpawnDrink(int DrinkToSpawn)
+    
+    
+    private void SpawnDrink()
     {
-        for (int i = 0; i < DrinkToSpawn; i++)
+        var drink = Instantiate(_drinkPrefabs, _drinkParent);
+        if(drink.TryGetComponent(out Drink drinkComponent))
         {
-            var drink = Instantiate(_drinkPrefabs, _drinkParent);
-            if(drink.TryGetComponent(out Drink drinkComponent))
-            {
-                drinkComponent.GetNewContainer(GetRandomContainer(), SetSpecial());
-                listDrinksThisRound.Add(drinkComponent);
-            }
-            else
-            {
-                Debug.LogError("N'A PAS LE COMPONENT DRINK");
-            }
-
-            _drinkLeftToSpawn--;
+            drinkComponent.GetNewContainer(GetRandomContainer(), SetSpecial());
+            listDrinksThisRound.Add(drinkComponent);
         }
-        GiveSam();
-
+        else
+        {
+            Debug.LogError("N'A PAS LE COMPONENT DRINK");
+        }
+        _drinkLeftToSpawn--;
     }
 
     private void GiveSam()
@@ -78,7 +76,6 @@ public class DrinkManager : MonoBehaviour
     
     private int GetAlcoolNumber()
     {
-        int playerNumber = _playerNumberThisRound;
         int PlayerRange = _playerNumberThisRound / 3;
         print("PlayerRange = " + PlayerRange);
         int alcoolLeft = Random.Range(PlayerRange - 1, PlayerRange + 1);
@@ -104,5 +101,17 @@ public class DrinkManager : MonoBehaviour
         }
         return Drink.DrinkCategories.Water;
 
+    }
+
+    private IEnumerator WaitForSpawn()
+    {
+        while (_drinkLeftToSpawn > 0 )
+        {
+            SpawnDrink();
+            ShakeManager.instance.ShakeCamera(2,0.3f);
+            yield return new WaitForSeconds(1);
+        }
+        
+        GiveSam();
     }
 }
