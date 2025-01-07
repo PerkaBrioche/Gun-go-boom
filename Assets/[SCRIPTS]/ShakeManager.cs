@@ -14,10 +14,14 @@ public class ShakeManager : MonoBehaviour
         }
     }
 
+    // UTILISER CETTE FONCTION POUR JOUER UN SHAKE !!! //
     public void ShakeCamera(float intensity, float duration)
     {
         StartCoroutine(Shake(intensity, duration));
     }
+    
+    
+    // PAS TOUCHE ICI EN BAS (*ABOIEMENT* WAF WAF WAF) //
 
     private IEnumerator Shake(float intensity, float duration)
     {
