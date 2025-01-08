@@ -14,20 +14,26 @@ public class DrinkManager : MonoBehaviour
     [SerializeField] private float timeBeetweenSpawn;
     [SerializeField] private float shakeIntensitySpawn;
     [SerializeField] private float durationShakeSpawn;
-    [Header("ROUND INFO")]
+    [Header("RULES INFO")]
     
     private int _drinkLeftToSpawn; 
-    private int _playerNumberThisRound;
     private int _alcoolLeftToSpawn;
+    
+    [Header("ROUND INFO")]
+
+    private int _playerNumberThisRound;
+    
+
 
     private List<Drink> listDrinksThisRound = new List<Drink>();
 
+    public bool drinksReady;
+
     private void Start()
     {
-        NewRound();
     }
 
-    private void NewRound()
+    public void PrepareDrink()
     {
         CanBeSpecial = true;
         _playerNumberThisRound = GameManager.Instance.GetPlayerNumber();
@@ -79,8 +85,7 @@ public class DrinkManager : MonoBehaviour
     
     private int GetAlcoolNumber()
     {
-        int PlayerRange = _playerNumberThisRound / 3;
-        print("PlayerRange = " + PlayerRange);
+        int PlayerRange = (int)(_playerNumberThisRound / 3);
         int alcoolLeft = Random.Range(PlayerRange - 1, PlayerRange + 1);
         
         if (alcoolLeft < 1)
@@ -89,6 +94,11 @@ public class DrinkManager : MonoBehaviour
         }
 
         return alcoolLeft;
+    }
+
+    public int GetAlcoolInRound()
+    {
+        return (int)(_playerNumberThisRound / 3) ;
     }
 
     private Drink.DrinkCategories GetRandomContainer()
@@ -116,5 +126,16 @@ public class DrinkManager : MonoBehaviour
         }
         
         GiveSam();
+        GameManager.Instance.StartSpin();
     }
+
+    public int GetWaterInfo()
+    {
+        return (_playerNumberThisRound - GetAlcoolInRound());
+    }
+    public (int, int) GetDrinksInfo()
+    {
+        return (GetAlcoolInRound(), _playerNumberThisRound - GetAlcoolInRound());
+    }
+    
 }

@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-
 public class Spin : MonoBehaviour
 {
     [SerializeField] float minimumSpeed = 0.0f;
@@ -11,25 +11,41 @@ public class Spin : MonoBehaviour
 
     float startTime;
     float currentSpeed;
+    float endSpeedTimer;
 
+    public bool readyToStop;
 
     void Update()
     {
         if (isSpinning)
         {
             float t = (Time.time - startTime) / duration;
-
             // Decrease speed
-            currentSpeed = Mathf.SmoothStep(maximumSpeed, minimumSpeed, t); //maximumSpeed > minimunSpeed dc decceleration
+            if (!readyToStop)
+            {
+                currentSpeed = Mathf.SmoothStep(maximumSpeed, minimumSpeed, t); //maximumSpeed > minimunSpeed dc decceleration
+            }
+            else
+            {
+                // endSpeedTimer += Time.deltaTime;
+                // currentSpeed = minimumSpeed - endSpeedTimer;
+                // print("END SPEED = " + currentSpeed);
+                // if (currentSpeed < 0)
+                // {
+                //     isSpinning = false;
+                // }
+            }
 
             gameObject.transform.Rotate(0, 0, currentSpeed * Time.deltaTime * -1, Space.Self);
 
             if (t >= 1.0f)
             {
-                ResetSpin();
+                GameManager.Instance.StartLockingSpin();
             }
         }
     }
+    
+    
 
 
     //Btn
@@ -44,7 +60,7 @@ public class Spin : MonoBehaviour
         }
     }
 
-    private void ResetSpin()
+    public void StopSpin()
     {
         currentSpeed = 0;
 
