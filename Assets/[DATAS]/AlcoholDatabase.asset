@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f81c4ec27b85a478bd2da9f7f13b71, type: 3}
+  m_Name: AlcoholDatabase
+  m_EditorClassIdentifier: 
+  datas:
+  - label: Bierre
+    value: 2
+    roundMax: 100
+  - label: Vin
+    value: 3
+    roundMax: 100
+  - label: Wisky
+    value: 4
+    roundMax: 100
+  - label: Jaeger
+    value: 6
+    roundMax: 100
+  - label: Vodka
+    value: 6
+    roundMax: 100
