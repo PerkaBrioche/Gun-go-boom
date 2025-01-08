@@ -14,10 +14,15 @@ public class Drink : MonoBehaviour
     [Header("The drink contain ; ")]
     [SerializeField] private DrinkCategories Contain;
 
-    public void GetNewContainer(DrinkCategories contain, bool isSpecial)
+    public void SetNewContainer(DrinkCategories contain, bool isSpecial)
     {
         Contain = contain;
         _isSpecial = isSpecial;
+    }
+
+    public DrinkCategories GetContainer()
+    {
+        return Contain;
     }
 
     public void SetSamStatus()

@@ -4,7 +4,7 @@ using UnityEngine;
 public class ShakeManager : MonoBehaviour
 {
     public static ShakeManager instance;
-    [SerializeField] private RectTransform _rectTransform;
+    [SerializeField] private Transform _rectTransform;
 
     private void Awake()
     {
@@ -37,16 +37,6 @@ public class ShakeManager : MonoBehaviour
 
             float offsetX = Random.Range(-shakeIntensity, shakeIntensity);
             float offsetY = Random.Range(-shakeIntensity, shakeIntensity);
-            
-            if (shakeIntensity < 0)
-            {
-                shakeIntensity += Time.deltaTime;
-            }
-            if (shakeIntensity > 0)
-            {
-                shakeIntensity -= Time.deltaTime;
-            }
-
 
             
             _rectTransform.localPosition = new Vector3(originalPos.x + offsetX, originalPos.y + offsetY, originalPos.z);

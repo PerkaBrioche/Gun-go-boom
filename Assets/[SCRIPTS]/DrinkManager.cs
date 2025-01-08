@@ -10,7 +10,10 @@ public class DrinkManager : MonoBehaviour
     [SerializeField] private Transform _drinkParent;
 
     private bool CanBeSpecial;
-    
+    [Header("GAME INFO")] 
+    [SerializeField] private float timeBeetweenSpawn;
+    [SerializeField] private float shakeIntensitySpawn;
+    [SerializeField] private float durationShakeSpawn;
     [Header("ROUND INFO")]
     
     private int _drinkLeftToSpawn; 
@@ -41,7 +44,7 @@ public class DrinkManager : MonoBehaviour
         var drink = Instantiate(_drinkPrefabs, _drinkParent);
         if(drink.TryGetComponent(out Drink drinkComponent))
         {
-            drinkComponent.GetNewContainer(GetRandomContainer(), SetSpecial());
+            drinkComponent.SetNewContainer(GetRandomContainer(), SetSpecial());
             listDrinksThisRound.Add(drinkComponent);
         }
         else
@@ -108,8 +111,8 @@ public class DrinkManager : MonoBehaviour
         while (_drinkLeftToSpawn > 0 )
         {
             SpawnDrink();
-            ShakeManager.instance.ShakeCamera(2,0.3f);
-            yield return new WaitForSeconds(1);
+            ShakeManager.instance.ShakeCamera(shakeIntensitySpawn,durationShakeSpawn);
+            yield return new WaitForSeconds(timeBeetweenSpawn);
         }
         
         GiveSam();
