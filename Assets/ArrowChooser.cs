@@ -20,10 +20,9 @@ public class ArrowChooser : MonoBehaviour
             }
         }
     }
-
     private void ReturnDrink()
     {
-        GameManager.Instance.StopSpin(GetContenant());
+        GameManager.Instance.StopSpin(actualDrink.GetComponent<Drink>());
     }
 
     private void OnTriggerExit2D(Collider2D other)

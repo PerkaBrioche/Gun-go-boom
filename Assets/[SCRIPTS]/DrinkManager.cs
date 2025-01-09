@@ -18,10 +18,12 @@ public class DrinkManager : MonoBehaviour
     
     private int _drinkLeftToSpawn; 
     private int _alcoolLeftToSpawn;
+    private int AlcoolBonus;
     
     [Header("ROUND INFO")]
 
     private int _playerNumberThisRound;
+    private int _alcoolThisRound;
     
 
 
@@ -86,19 +88,14 @@ public class DrinkManager : MonoBehaviour
     private int GetAlcoolNumber()
     {
         int PlayerRange = (int)(_playerNumberThisRound / 3);
-        int alcoolLeft = Random.Range(PlayerRange - 1, PlayerRange + 1);
+        _alcoolThisRound = Random.Range(PlayerRange - 1, PlayerRange + 1);
         
-        if (alcoolLeft < 1)
+        if (_alcoolThisRound < 1)
         {
-            return 1;
+            _alcoolThisRound = 1;
         }
 
-        return alcoolLeft;
-    }
-
-    public int GetAlcoolInRound()
-    {
-        return (int)(_playerNumberThisRound / 3) ;
+        return _alcoolThisRound;
     }
 
     private Drink.DrinkCategories GetRandomContainer()
@@ -118,8 +115,11 @@ public class DrinkManager : MonoBehaviour
 
     private IEnumerator WaitForSpawn()
     {
+
         while (_drinkLeftToSpawn > 0 )
         {
+            timeBeetweenSpawn = (float)_drinkLeftToSpawn / 12;
+            print(timeBeetweenSpawn);
             SpawnDrink();
             ShakeManager.instance.ShakeCamera(shakeIntensitySpawn,durationShakeSpawn);
             yield return new WaitForSeconds(timeBeetweenSpawn);
@@ -129,13 +129,47 @@ public class DrinkManager : MonoBehaviour
         GameManager.Instance.StartSpin();
     }
 
-    public int GetWaterInfo()
-    {
-        return (_playerNumberThisRound - GetAlcoolInRound());
-    }
+
     public (int, int) GetDrinksInfo()
     {
         return (GetAlcoolInRound(), _playerNumberThisRound - GetAlcoolInRound());
     }
     
+    public void DestroyPreviousDrinks()
+    {
+        for (int i = 0; i < _playerNumberThisRound ; i++)
+        {
+            Destroy(_drinkParent.GetChild(i).gameObject, 0.4f);
+        }
+        listDrinksThisRound.Clear();
+
+    }
+
+    public int GetAlcoolInRound()
+    {
+        int alcool = 0;
+        for (int i = 0; i < listDrinksThisRound.Count; i++)
+        {
+            if (listDrinksThisRound[i].GetContainer() == Drink.DrinkCategories.Alcool)
+            {
+                alcool++;
+            }
+        }
+
+        _alcoolThisRound = alcool;
+        return _alcoolThisRound;
+    }
+    public int GetWaterInfo()
+    {
+        return (_playerNumberThisRound - _alcoolThisRound);
+    }
+    public void AddAlcoolBonus(int value)
+    {
+        AlcoolBonus += value;
+    }
+
+    public void ResetAlcoolBonus()
+    {
+        AlcoolBonus = 0;
+    }
 }

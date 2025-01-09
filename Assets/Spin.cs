@@ -1,10 +1,14 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 public class Spin : MonoBehaviour
 {
     [SerializeField] float minimumSpeed = 0.0f;
     [SerializeField] float maximumSpeed = 500.0f;
-    [SerializeField] float duration = 3.0f;
+    [SerializeField] float minDuration = 3.0f;
+    [SerializeField] float maxDuration = 5;
+    [SerializeField] float duration;
 
     bool isSpinning = false;
     bool canSpin = true;
@@ -54,6 +58,7 @@ public class Spin : MonoBehaviour
         if (canSpin)
         {
             startTime = Time.time;
+            duration = Random.Range(minDuration, maxDuration);
 
             isSpinning = true;
             canSpin = false;

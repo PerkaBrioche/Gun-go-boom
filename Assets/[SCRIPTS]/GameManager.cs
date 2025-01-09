@@ -9,13 +9,19 @@ public class GameManager : MonoBehaviour
     private ArrowChooser _arrowChooser;
     private Spin _spin;
     public static GameManager Instance;
-    
 
+    private Drink _drink;
+
+
+    private bool _revealTime;
+    private bool _gameEnd = true;
+    
 
 
     [Header("GAME INFO")] 
     [SerializeField] private int playerNumber;
     [SerializeField] private TextMeshProUGUI _alcoolInfoRound;
+    [SerializeField] private TextMeshProUGUI _butReveal;
     private void Awake()
     {
         if (Instance == null)
@@ -29,7 +35,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        StartNewRound();
+        _butReveal.text = "START";
     }
     public int GetPlayerNumber()
     {
@@ -38,6 +44,7 @@ public class GameManager : MonoBehaviour
 
     public void StartNewRound()
     {
+        _alcoolInfoRound.text = "";
         _drinkManager.PrepareDrink();
     }
     public void StartSpin()
@@ -51,16 +58,72 @@ public class GameManager : MonoBehaviour
         _arrowChooser.LockDrink();
     }
 
-    public void StopSpin(Drink.DrinkCategories drinkCategory)
+    public void StopSpin(Drink drinkValue)
     {
         _spin.StopSpin();
-        print(drinkCategory);
+        _drink = drinkValue;
+        _revealTime = true;
+        _butReveal.transform.parent.gameObject.SetActive(true);
     }
 
     public void ShowDrinksInfoInRound()
     {
-        _alcoolInfoRound.text = _drinkManager.GetAlcoolInRound() + " ALCOOLS \n" + _drinkManager.GetWaterInfo() + " WATER";
+        _alcoolInfoRound.text = _drinkManager.GetAlcoolInRound() + " ALCOOL \n" + _drinkManager.GetWaterInfo() + " WATER";
     }
+
+    public void PlayButtonPress()
+    {
+        if (_revealTime)
+        {
+            // REVEAL //
+            _alcoolInfoRound.text = _drink.GetContainer().ToString();
+            if (_drink.GetContainer() == Drink.DrinkCategories.Alcool)
+            {
+                FoundAlcool();
+            }
+            else
+            {
+                FoundWater();
+            }
+            _butReveal.text = "START";
+            _revealTime = false;
+        }
+        else
+        {
+            // START //
+            if (_gameEnd)
+            {
+                _gameEnd = false;
+                StartNewRound();
+            }
+            else
+            {
+                StartSpin();
+            }
+            _butReveal.transform.parent.gameObject.SetActive(false);
+            _butReveal.text = "REVEAL";
+        }
+                    
+
+
+    }
+    
+    
+
+    private void FoundWater()
+    {
+        _drink.SetNewContainer( Drink.DrinkCategories.Alcool, false);
+    }
+
+    private void FoundAlcool()
+    {
+        _drinkManager.DestroyPreviousDrinks();
+        _gameEnd = true;
+    }
+
+
+    
+    
     
     
 }
