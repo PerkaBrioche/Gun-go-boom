@@ -135,14 +135,23 @@ public class DrinkManager : MonoBehaviour
         return (GetAlcoolInRound(), _playerNumberThisRound - GetAlcoolInRound());
     }
     
-    public void DestroyPreviousDrinks()
-    {
-        for (int i = 0; i < _playerNumberThisRound ; i++)
-        {
-            Destroy(_drinkParent.GetChild(i).gameObject);
-        }
-        listDrinksThisRound.Clear();
 
+    public IEnumerator DestroyPreviousDrinks()
+    {
+        int _drinkLeftToDispawn = _playerNumberThisRound;
+        while (_drinkLeftToDispawn > 0)
+        {
+            timeBeetweenSpawn = (float)_drinkLeftToDispawn / 12;
+
+            // DISPAWN DRINKS //
+            Destroy(_drinkParent.GetChild(0).gameObject);
+            ShakeManager.instance.ShakeCamera(shakeIntensitySpawn, durationShakeSpawn);
+
+            _drinkLeftToDispawn--;
+            yield return new WaitForSeconds(timeBeetweenSpawn);
+        }
+
+        listDrinksThisRound.Clear();
     }
 
     public int GetAlcoolInRound()

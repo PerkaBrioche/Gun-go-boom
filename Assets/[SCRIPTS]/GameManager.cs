@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -89,7 +90,7 @@ public class GameManager : MonoBehaviour
             _alcoolInfoRound.text = _drink.GetContainer().ToString();
             if (_drink.GetContainer() == Drink.DrinkCategories.Alcool)
             {
-                FoundAlcool();
+                StartCoroutine(FoundAlcool());
             }
             else
             {
@@ -127,20 +128,20 @@ public class GameManager : MonoBehaviour
         _drink.SetNewContainer( Drink.DrinkCategories.Alcool, false);
     }
 
-    private void FoundAlcool()
+    private IEnumerator FoundAlcool()
     {
         //END
         _gameEnd = true;
         _butReveal.transform.parent.gameObject.SetActive(false);
 
         //RESTART
-        Invoke("Restart", 1.5f);
+        yield return StartCoroutine(_drinkManager.DestroyPreviousDrinks());
+        Restart();
     }
 
     private void Restart()
     {
         // CLEAR //
-        _drinkManager.DestroyPreviousDrinks();
         _alcoolInfoRound.text = "";
 
         // RESET //
