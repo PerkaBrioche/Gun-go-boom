@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,16 +11,22 @@ public class GameManager : MonoBehaviour
     private Spin _spin;
     public static GameManager Instance;
 
+    private int _playerNb = 1;
     private Drink _drink;
-
 
     private bool _revealTime;
     private bool _gameEnd = true;
-    
 
 
-    [Header("GAME INFO")] 
-    [SerializeField] private int playerNumber;
+    [Header("GAME INFO")]
+
+    //Player nb
+    [SerializeField] private TextMeshProUGUI _TxtPlayerNumber;
+    [SerializeField] private Button _butPrevious;
+    [SerializeField] private Button _butNext;
+    [SerializeField] private GameObject _playerNumberPrefab;
+
+    [Space(15)]
     [SerializeField] private TextMeshProUGUI _alcoolInfoRound;
     [SerializeField] private TextMeshProUGUI _butReveal;
     private void Awake()
@@ -32,6 +39,9 @@ public class GameManager : MonoBehaviour
         _drinkManager = FindFirstObjectByType<DrinkManager>();
         _spin = FindFirstObjectByType<Spin>();
         _arrowChooser = FindFirstObjectByType<ArrowChooser>();
+
+        //Btn nb player
+        _butPrevious.interactable = false;
     }
     private void Start()
     {
@@ -39,12 +49,12 @@ public class GameManager : MonoBehaviour
     }
     public int GetPlayerNumber()
     {
-        return playerNumber;
+        return _playerNb * 2;
     }
 
     public void StartNewRound()
     {
-        _alcoolInfoRound.text = "";
+        //_alcoolInfoRound.text = "";
         _drinkManager.PrepareDrink();
     }
     public void StartSpin()
@@ -94,6 +104,8 @@ public class GameManager : MonoBehaviour
             if (_gameEnd)
             {
                 _gameEnd = false;
+                _playerNumberPrefab.SetActive(false);
+
                 StartNewRound();
             }
             else
@@ -117,13 +129,63 @@ public class GameManager : MonoBehaviour
 
     private void FoundAlcool()
     {
-        _drinkManager.DestroyPreviousDrinks();
+        //END
         _gameEnd = true;
+        _butReveal.transform.parent.gameObject.SetActive(false);
+
+        //RESTART
+        Invoke("Restart", 1.5f);
     }
 
+    private void Restart()
+    {
+        // CLEAR //
+        _drinkManager.DestroyPreviousDrinks();
+        _alcoolInfoRound.text = "";
 
+        // RESET //
+        _playerNumberPrefab.SetActive(true);
+        _butReveal.transform.parent.gameObject.SetActive(true);
+    }
     
-    
-    
-    
+    // Btn Player Number
+    public void IncreasePlayerNumber()
+    {
+        //player number max : 6
+        if (_playerNb<6)
+        {
+            _playerNb += 1;
+            _TxtPlayerNumber.text = _playerNb.ToString();
+        }
+
+        //Interactable Btn
+        if (_playerNb == 6)
+        {
+            _butNext.interactable = false;
+        } else if (_playerNb == 2)
+        {
+            _butPrevious.interactable = true;
+        }
+    }
+
+    public void DecrecreasePlayerNumber()
+    {
+        //player number min : 1
+        if (_playerNb > 1)
+        {
+            _playerNb -= 1;
+            _TxtPlayerNumber.text = _playerNb.ToString();
+        }
+
+        //Interactable Btn
+        if (_playerNb == 1)
+        {
+            _butPrevious.interactable = false;
+        }
+        else if (_playerNb == 5)
+        {
+            _butNext.interactable = true;
+        }
+    }
+
 }

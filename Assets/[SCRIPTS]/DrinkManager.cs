@@ -139,7 +139,7 @@ public class DrinkManager : MonoBehaviour
     {
         for (int i = 0; i < _playerNumberThisRound ; i++)
         {
-            Destroy(_drinkParent.GetChild(i).gameObject, 0.4f);
+            Destroy(_drinkParent.GetChild(i).gameObject);
         }
         listDrinksThisRound.Clear();
 
