@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowDrinksInfoInRound()
     {
-        _alcoolInfoRound.text = _drinkManager.GetAlcoolInRound() + " ALCOOL \n" + _drinkManager.GetWaterInfo() + " WATER";
+        UpdateText(_drinkManager.GetAlcoolInRound() + " ALCOOL \n" + _drinkManager.GetWaterInfo() + " WATER", Color.white);
     }
 
     public void PlayButtonPress()
@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
         if (_revealTime)
         {
             // REVEAL //
-            _alcoolInfoRound.text = _drink.GetContainer().ToString();
+            UpdateText(_drink.GetContainer().ToString(), Color.red);
             if (_drink.GetContainer() == Drink.DrinkCategories.Alcool)
             {
                 StartCoroutine(FoundAlcool());
@@ -187,6 +187,12 @@ public class GameManager : MonoBehaviour
         {
             _butNext.interactable = true;
         }
+    }
+
+    private void UpdateText(string text, Color color)
+    {
+        _alcoolInfoRound.text = text;
+        _alcoolInfoRound.color = color;
     }
 
 }
